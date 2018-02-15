@@ -1,0 +1,472 @@
+@import "fonts"
+@import "libs"
+@import "vars"
+
+*
+	-webkit-box-sizing: border-box
+	-moz-box-sizing: border-box
+	box-sizing: border-box
+	&:before, &:after
+		-webkit-box-sizing: border-box
+		-moz-box-sizing: border-box
+		box-sizing: border-box
+
+*::-webkit-input-placeholder
+	color: #666
+	opacity: 1
+
+*:-moz-placeholder
+	color: #666
+	opacity: 1
+
+*::-moz-placeholder
+	color: #666
+	opacity: 1
+
+*:-ms-input-placeholder
+	color: #666
+	opacity: 1
+
+body input:focus:required:invalid,
+body textarea:focus:required:invalid
+	color: #666
+body input:required:valid,
+body textarea:required:valid
+	color: #666
+
+html, body
+	height: 100%
+
+body
+	font-size: 13px
+	min-width: 320px
+	position: relative
+	line-height: 1.65
+	font-family: $default-font
+.control-row
+	.control
+		.control-btn-on
+			.ind-2
+				background: radial-gradient(ellipse at center, blue 0%,#000000 120%)
+.tv-col-6
+	.tv
+		.screen
+			.tv-on
+				background: radial-gradient(ellipse at center, red 10%,#000000 120%)
+.img-responsive
+	display: block
+	max-width: 100%
+	height: auto
+.text-center
+	text-align: center
+
+::selection
+	background-color: $accent
+	color: #fff
+.perspective-wrapper
+	perspective: 1000px
+.tv
+	transform-style: preserve-3d
+	perspective: 900px
+	.left-line,
+	.right-line
+		position: absolute
+		top: 0
+		height: 350px
+		width: 25px
+		background: gray
+	.left-line
+		transform: rotateY(90deg) translate3d(11px, 0px, -13px)
+	.right-line
+		right: 0
+		transform: rotateY(90deg) translate3d(13px, 0px, 10px)
+	.top-line,
+	.bottom-line
+		position: absolute
+		height: 25px
+		width: 100%
+	.top-line
+		top: 0
+		transform: rotatex(90deg) translate3d(0px, -11px, 13px)
+		background: gray
+	.bottom-line
+		background: black
+		bottom: 0
+		transform: rotatex(90deg) translate3d(0px,-10px, 37px)
+
+
+.control
+	transform-style: preserve-3d
+	.left-line
+		top: 0
+		width: 1em
+		height: 45em
+		background: gray
+		position: absolute
+		transform: rotateY(90deg) translate3d(7px, 10px, -25px)
+	.right-line
+		top: 0
+		width: 1em
+		height: 45em
+		background: gray
+		position: absolute
+		right: 0
+		transform: rotateY(90deg) translate3d(7px, 10px, 7px)
+
+	.control-row
+		.control-col-3
+			.blue
+				background: blue
+			.yellow
+				background: yellow
+			.green
+				background: green
+			.red
+				background: red
+
+.container
+	margin: 0 auto
+	width: 100%
+	padding: 100px 15px
+	.row
+		margin-right: -15px
+		margin-left: -15px
+		display: flex
+		flex-wrap: wrap
+		.media-control1
+			text-align: center
+			margin: 0
+			display: none
+		.media-control2
+			text-align: center
+			margin: 0
+			display: none
+		.media-control3
+			text-align: center
+			margin: 0
+			display: none
+		.text
+			padding: 20px
+			background-color: gray
+		.col-12
+			width: 100%
+			padding: 0 15px
+		.col-6
+			width: 50%
+			padding: 0 15px
+		.col-4
+			width: 33.33%
+			padding: 0 15px
+		.item
+			width: 100%
+			height: auto
+			margin: 0 auto
+			font-size: 12px
+			background-color: lightblue
+			margin-top: 20px
+			text-align: center
+			.t-em
+				font-size: 2em
+			.t-rem
+				font-size: 2rem
+			.t-vwh
+				font-size: 2vh
+
+
+
+
+.tv-col-6
+	width: 50%
+	padding: 0 15px
+.tv
+	min-width: 200px
+	max-width: 1200px
+	margin-bottom: 10px
+	.screen
+		width: 100%
+		position: relative
+		height: 350px
+		border: 25px solid #151515
+		border-radius: 10px
+		&::before
+			content: "Youtube"
+			display: block
+			position: absolute
+			color: white
+			bottom: -7.5%
+			left: 47%
+		.video
+			width: 100%
+			height: 100%
+			background: black
+		.ind
+			width: 7px
+			height: 7px
+			border-radius: 50%
+			position: absolute
+			bottom: -5%
+			right: 5%
+			box-shadow: -0.5px -1px 1px 0 gray inset
+			background: radial-gradient(ellipse at center, white 0%,#000000 100%)
+	.stand
+		width: 80px
+		height: 50px
+		background-color: gray
+		margin: 0 auto
+		position: relative
+		&::before
+			content: ""
+			display: block
+			width: 200px
+			height: 10px
+			position: absolute
+			background-color: #C5C5C5
+			bottom: 0
+			left: -75%
+			border-bottom: 1px solid black
+			border-radius: 20px 20px 0 0
+.control
+	width: 15em
+	max-width: 300px
+	background: linear-gradient(to bottom, #2a3344 0%,#0F0B08 50%)
+	margin: 0 auto
+	border-radius: 20px 20px 0 0
+	box-shadow: 1px 2px 0 1px black
+	padding: 20px
+	position: relative
+	&::after
+		content: ""
+		display: block
+		position: absolute
+		width: 15.2em
+		height: 5em
+		background: #0F0B08
+		left: 0
+		border-radius: 0 0 90% 90%
+	.control-row
+		margin-right: -10px
+		margin-left: -10px
+		display: flex
+		height: 15%
+		margin-bottom: 1.5em
+		.control-col-6
+			display: flex
+			width: 50%
+			padding: 0 10px
+			justify-content: center
+		.control-col-3
+			display: flex
+			justify-content: center
+			width: 25%
+			padding: 0 10px
+		.control-col-4
+			display: flex
+			justify-content: center
+			width: 33.33%
+			padding: 0 10px
+		.control-col-12
+			display: flex
+			justify-content: center
+			width: 100%
+			padding: 0 10px
+	.control-btn,
+	.control-btn-on,
+	.control-btn-off
+		background-color: #AFBABC
+		background: radial-gradient(ellipse at center, #afbabc 10%,#000000 130%)
+		border-radius: 50%
+		width: 2.5em
+		height: 2.5em
+		position: relative
+		box-shadow: 0px 1px 0px 1px black
+		&:hover
+			cursor: pointer
+		&:active
+			background: #1A1011
+		.fa-stop,
+		.fa-bars,
+		.fa-times,
+		.fa-trash
+			color: white
+			position: relative
+			top: 15%
+			left: 32%
+		.btn-text
+			position: absolute
+			top: 15%
+			left: 35%
+			color: #fff
+			text-shadow: 0px 1px 0px #676b6c
+		.btn-text-2
+			position: absolute
+			color: #AFBABC
+			top: -47%
+			left: 7%
+			text-transform: uppercase
+			text-shadow: 1px 1px 0px black
+			font-size: 0.7em
+		.btn-text-top
+			position: absolute
+			top: -1.5em
+			color: #AFBABC
+			font-size: 0.7rem
+			left: 0.3em
+	.control-btn-left
+		border: 1em solid transparent
+		border-right: 2em solid #AFBABC
+		display: block
+		width: 0
+		height: 0
+	.control-btn-up
+		border: 1em solid transparent
+		border-bottom: 2em solid #AFBABC
+		display: block
+		width: 0
+		height: 0
+	.control-btn-down
+		border: 1em solid transparent
+		border-top: 2em solid #AFBABC
+		display: block
+		width: 0
+		height: 0
+	.control-btn-right
+		border: 1em solid transparent
+		border-left: 2em solid #AFBABC
+		display: block
+		width: 0
+		height: 0
+	.control-btn-on
+		background: radial-gradient(ellipse at center, #D8445A 20%,#000000 150%)
+		border-radius: 40%
+		width: 3em
+		height: 1.8em
+		.ind-1
+			width: 7px
+			height: 7px
+			background: radial-gradient(ellipse at center, black 0%,#000000 100%)
+			position: absolute
+			border-radius: 50%
+			top: -1em
+			left: -1em
+		.fa-power-off
+			color: white
+			position: relative
+			top: 5%
+			left: 35%
+			font-size: 1em
+	.control-btn-off
+		border-radius: 40%
+		width: 3em
+		height: 1.7em
+		.fa-volume-off
+			color: white
+			font-size: 1.2em
+			position: relative
+			top: 7%
+			left: 35%
+			text-shadow: 1px 1px 0 black
+		.btn-text-2
+			top: -70%
+			left: 10%
+	.control-btn-long
+		border-radius: 40%
+		width: 3em
+		background-color: #AFBABC
+		background: radial-gradient(ellipse at center, #afbabc 10%,#000000 120%)
+		height: 1em
+		position: relative
+		box-shadow: 1px 1px 0 2px black
+		.fa-play,
+		.fa-fast-backward,
+		.fa-fast-forward,
+		.fa-pause
+			color: white
+			position: relative
+			font-size: 0.7em
+			top: -50%
+			left: 35%
+		.btn-text-2
+			position: absolute
+			color: #AFBABC
+			top: -130%
+			text-transform: uppercase
+			font-size: 0.7em
+		&:active
+			background: black
+		&:hover
+			cursor: pointer
+
+
+
+.anim
+	animation-name: blink
+	animation-duration: 1s
+
+.put-video
+	display: none
+	position: absolute
+	top: 50%
+	left: 10%
+	width: 100%
+	label
+		display: block
+	input
+		padding: 10px
+		font-size: 1.5em
+		font-weight: bold
+		letter-spacing: 3px
+		width: 80%
+		border: 10px solid #fff
+		box-shadow: 1px 0px 5px 0px #BDE6F9 inset, 1px 1px 0px 0px #228ab7 
+
+
+.display
+	display: block
+
+
+@keyframes blink
+	from 
+		background: radial-gradient(ellipse at center, #0133b2 0%,#000000 100%)
+	to
+		background: radial-gradient(ellipse at center, black 0%,#000000 100%)
+
+
+
+@media only screen and (max-width : 767px)
+	/**/
+	.container
+		.row
+			flex-direction: column
+			.col-4, .tv-col-6
+				width: 100%
+			.media-control1
+				display: block
+
+@media only screen and (max-width : 420px)
+	/**/
+	body
+		font-size: 15px
+	.container
+		padding-top: 0
+	.tv
+		display: none
+
+
+@media only screen and (min-width : 768px) and (max-width : 1023px)
+	/**/	
+	.container
+		.row
+			.media-control2
+				display: block
+
+
+@media only screen and (min-width : 1024px)
+	/**/
+	.container
+		.row
+			.media-control3
+				display: block
+
+
+
+//@import "media"
