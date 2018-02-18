@@ -3,68 +3,64 @@ $(function() {
 
 	var video = [
 		{
+			author: "Свинка Пеппа",
 			name: "X8Z8okhkjv8",
 			time: 0
 		},
 		{
+			author: "Bac Le",
 			name: "aAWD65mFD_I",
 			time: 0
 		},
 		{
+			author: "metkii1985",
 			name: "0hMTcCYdg04",
 			time: 0
 		},
 		{
+			author: "Мега ТВ",
 			name: "8WdA-VI7Xyc",
 			time: 0
 		},
 		{
+			author: "Наука и Образование",
 			name: "XOhJAHDWJv8",
 			time: 0
 		},
 		{
+			author: "КОСМОПОЛИС HD",
 			name: "bPkC6znaauM",
 			time: 0
 		},
 		{
+			author: "Discovery Channel Россия",
 			name: "z_AtxPWdFZc",
 			time: 0
 		},
 		{
-			name: "z_AtxPWdFZc",
-			time: 0
-		},
-		{
-			name: "p505qUB-zXU",
-			time: 0
-		},
-		{
+			author: "HD video",
 			name: "SccyIMbrx0M",
 			time: 0
+		},
+		{
+			author: "НЕЙШЕНЕЛ ГЕОГРАФИК",
+			name: "p505qUB-zXU",
+			time: 0
 		}
+
 	];
 
 	var db = firebase.database();
 	var videos = db.ref().child("video");
 	var fbmode = db.ref().child("control-mode");
-	videos.once('value')
-		.then( function(snapshot) {
-			for ( var i = 0; i < video.length; i++){
-				video[i].time = snapshot.child(i).child("time").val();
-				
-			}
-	});
-
-
+	var mode ;
+	
 	
 
-	
-	
-	
 	init();
 	
 	function init() {
-
+		listenFB();
 		btnClick();
 		btnClickOff();
 		objectMove();
@@ -76,7 +72,21 @@ $(function() {
 		exitMenu();
 
 	}
+	function listenFB(){
+		videos.once('value')
+		.then( function(snapshot) {
+			for ( var i = 0; i < video.length; i++){
+				video[i].time = snapshot.child(i).child("time").val();
+				
+			}
+	});
+	
+    fbmode.on('value', function(snapshot){
 
+    		mode = snapshot.child("mode").val();
+    		
+    	});
+	}
 	function objectMove() {
 
 		$( document ).mousemove(function( event ){
@@ -121,6 +131,7 @@ $(function() {
 
 				$('.ind').removeClass('tv-on');
 				$("iframe").attr("src"," ");
+				$(".rating-list").empty();
 				//localStorage.setItem('mode','0');
 				fbmode.update({
 					mode: '0'
@@ -141,6 +152,8 @@ $(function() {
 
 	}
 
+
+
 	function btnClick() {
 
 		$(".control-btn").on("click", function() {
@@ -148,13 +161,6 @@ $(function() {
 			for ( var i = 0; i < video.length; i++) {
 				$(".ind").addClass("tv-on");
 				if ($(this).data("video") == i) {
-                    var mode ;
-                    fbmode.once('value')
-                    	.then(function(snapshot){
-                    		mode = snapshot.child("mode").val();
-                    		
-                    	});
-
                     
                     if ( mode == 1 ){
                     	localStorage.setItem('btnsave', i);
@@ -162,7 +168,7 @@ $(function() {
                     } 
                    	 else {
                    	 	
-                   	 	$("iframe").attr("src", "https://www.youtube.com/embed/" + video[i].name + "?showinfo=0&autoplay=1");
+                   	 	$("iframe").attr("src", "https://www.youtube.com/embed/" + video[i].name + "?showinfo=0&autoplay=1&start=" + video[i].time);
                    	 	
                    	 }
                 }				
@@ -182,7 +188,6 @@ $(function() {
         var letter = $(btnObj).data("let");
 	    	strArr = letter.split("");
 
-	 
         var idTimeOut = setTimeout(function() {
 				            
 	      localStorage.setItem('btnsave', 0);
@@ -200,7 +205,6 @@ $(function() {
 
         } else {
         	q++;
-        	console.log(btnMark+ 'else');
         	count = 0;
         }
 
@@ -234,7 +238,15 @@ $(function() {
 					$('.rating').addClass('display');
 					$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
 					for (var i = 0; i < video.length; i++){
-						$(".rating-list").append("<li>" + video[i].name + " Время " + video[i].time + "</li>");
+						for (var k = 0; k < video.length-1; k++) {
+							for (var j = 0; j < video.length-1-k; j++)
+						        { if (video[j+1].time > video[j].time)
+						           { var t = video[j+1].time;
+						            video[j+1].time = video[j].time;
+						             video[j].time = t; }
+						        }
+					    }
+						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + video[i].author + " Просмотренно: " + video[i].time + "</li>");
 					}
 					
 				
@@ -271,6 +283,7 @@ $(function() {
 				if ($(this).data('video') == 200) {
 					word = [];
 					$("#put-name-video").val(" ");
+					$(".rating-list").empty();
 				}				
 				
 			indicator();
