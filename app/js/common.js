@@ -53,6 +53,7 @@ $(function() {
 	var db = firebase.database();
 	var videos = db.ref().child("video");
 	var fbmode = db.ref().child("control-mode");
+	var history = db.ref().child("history");
 	var mode ;
 	
 	
@@ -167,7 +168,9 @@ $(function() {
                     	putTex($(this),i);
                     } 
                    	 else {
-                   	 	
+                   	 	history.push({
+                   	 		"name": video[i].author
+                   	 	});
                    	 	$("iframe").attr("src", "https://www.youtube.com/embed/" + video[i].name + "?showinfo=0&autoplay=1&start=" + video[i].time);
                    	 	
                    	 }
@@ -246,7 +249,7 @@ $(function() {
 						             video[j].time = t; }
 						        }
 					    }
-						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + video[i].author + " Просмотренно: " + video[i].time + "</li>");
+						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + video[i].author + " Просмотренно: " + Math.round(video[i].time/60) + " мин.</li>");
 					}
 					
 				
@@ -302,6 +305,7 @@ $(function() {
 						mode: '0'
 					});
 					$('.put-video').removeClass('display');
+					$(".rating-list").empty();
 					
 				}				
 				
