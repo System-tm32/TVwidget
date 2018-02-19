@@ -3,7 +3,7 @@ $(function() {
 
 	var video = [
 		{
-			author: "Свинка Пеппа",
+			author: "События",
 			name: "X8Z8okhkjv8",
 			time: 0
 		},
