@@ -1,5 +1,5 @@
 $(function() {
-	var socket = new WebSocket("ws://192.168.43.41:8081");
+	var socket = new WebSocket("ws://192.168.0.206:8081");
 
 	var video = [
 		{
@@ -54,6 +54,7 @@ $(function() {
 	var videos = db.ref().child("video");
 	var fbmode = db.ref().child("control-mode");
 	var history = db.ref().child("history");
+	var historyLimit = db.ref().child("history").limitToLast(10);
 	var mode ;
 	
 	
@@ -68,6 +69,7 @@ $(function() {
 		objectMoveHyro();
 		deleteTextInput();
 		openRating();
+		openHistory();
 		openVideo();
 		openMenu();
 		exitMenu();
@@ -117,9 +119,10 @@ $(function() {
 
 	socket.onmessage = function(event) {
 
-	  var gyro = JSON.parse(even.data);
+	  var gyro = JSON.parse(event.data);
 
 	  $(".tv").css("transform", "rotateY(" + gyro.gamma + "deg) rotateX(" + -1 * gyro.beta + "deg)");
+	  
 		};
 	}
 
@@ -233,24 +236,46 @@ $(function() {
     }
      function openRating() {
     	$(".control-btn-long").on("click", function() {
-			
+				$("iframe").attr("src"," ");
 				$('.ind').addClass('tv-on');
 				
 				if ($(this).data('video') == 50) {
-					
+					$('.history').removeClass('display');
 					$('.rating').addClass('display');
 					$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
 					for (var i = 0; i < video.length; i++){
-						for (var k = 0; k < video.length-1; k++) {
-							for (var j = 0; j < video.length-1-k; j++)
-						        { if (video[j+1].time > video[j].time)
-						           { var t = video[j+1].time;
-						            video[j+1].time = video[j].time;
-						             video[j].time = t; }
-						        }
-					    }
-						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + video[i].author + " Просмотренно: " + Math.round(video[i].time/60) + " мин.</li>");
+
+						
+						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + video[i].author + " Просмотрено: " + Math.round(video[i].time/60) + " мин.</li>");
+					
 					}
+					
+				
+				}				
+				
+			indicator();
+		});
+    }
+
+    function openHistory() {
+    	$(".control-btn-long").on("click", function() {
+			
+				$('.ind').addClass('tv-on');
+				$("iframe").attr("src"," ");
+				
+				if ($(this).data('video') == 51) {
+					$('.rating').removeClass('display');
+					$('.history').addClass('display');
+					$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
+					historyLimit.once('value', function(snapshot){
+
+			    		snapshot.forEach(function(childSnapshot){
+			    			//var childKey = childSnapshot.key;
+			    			var childData = childSnapshot.child("name").val();
+			    			$(".history-list").append("<li>"+ childData +"</li>");
+			    		})
+			    			 
+			    	});
 					
 				
 				}				
@@ -286,7 +311,7 @@ $(function() {
 				if ($(this).data('video') == 200) {
 					word = [];
 					$("#put-name-video").val(" ");
-					$(".rating-list").empty();
+					
 				}				
 				
 			indicator();
@@ -305,7 +330,9 @@ $(function() {
 						mode: '0'
 					});
 					$('.put-video').removeClass('display');
+					$('.history').removeClass('display');
 					$(".rating-list").empty();
+					$(".history-list").empty();
 					
 				}				
 				
