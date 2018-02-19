@@ -360,7 +360,7 @@ $(function() {
 		    }, 700);	 
 
 	}
-	function getNowTime (){
+	function getTime(){
 
 		var tmp = new Date();
 		return tmp.getTime()
