@@ -62,6 +62,7 @@ $(function() {
 	init();
 	
 	function init() {
+
 		listenFB();
 		btnClick();
 		btnClickOff();
@@ -157,24 +158,38 @@ $(function() {
 	}
 
 
-
+var firstTime = 0;
 	function btnClick() {
-
+		var prevbtn;
 		$(".control-btn").on("click", function() {
 			btnMark = getLastBtn(localStorage.getItem('btnsave'));
 			for ( var i = 0; i < video.length; i++) {
 				$(".ind").addClass("tv-on");
 				if ($(this).data("video") == i) {
-                    
+					if ( typeof prevbtn !== 'undefined' ) {
+						
+						video[prevbtn].time += (getTimeView() - firstTime)/1000;
+						
+						db.ref().child('/video/' + prevbtn).update({
+							 time: video[prevbtn].time
+						  });
+
+						
+						
+					} 
+
+                    prevbtn = $(this).data("video");
+                    firstTime = getTimeView();
                     if ( mode == 1 ){
+                    	firstTime = 0;
                     	localStorage.setItem('btnsave', i);
                     	putTex($(this),i);
                     } 
                    	 else {
-                   	 	history.push({
-                   	 		"name": video[i].author
-                   	 	});
-                   	 	$("iframe").attr("src", "https://www.youtube.com/embed/" + video[i].name + "?showinfo=0&autoplay=1&start=" + video[i].time);
+                   	 	// history.push({
+                   	 	// 	"name": video[i].author
+                   	 	// });
+                   	 	$("iframe").attr("src", "https://www.youtube.com/embed/" + video[i].name + "?showinfo=0&autoplay=1&start=" + Math.round(video[i].time));
                    	 	
                    	 }
                 }				
@@ -360,7 +375,7 @@ $(function() {
 		    }, 700);	 
 
 	}
-	function getTime(){
+	function getTimeView(){
 
 		var tmp = new Date();
 		return tmp.getTime()
