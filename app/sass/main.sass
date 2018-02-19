@@ -79,11 +79,24 @@ h4
 		height: 350px
 		width: 25px
 		background: gray
+	.behind-field
+		position: absolute
+		top: 0
+		height: 350px
+		width: 100%
+		background: linear-gradient(to bottom, #2a3344 0%,#0F0B08 50%)
+		border-radius: 10px
+		text-align: center
+		transform: translate3d(0px, 0px, -25px)
+		.behind-text
+			color: #fff
+			font-size: 5em
+
 	.left-line
-		transform: rotateY(90deg) translate3d(11px, 0px, -13px)
+		transform: rotateY(90deg) translate3d(13px, 0px, -12px)
 	.right-line
 		right: 0
-		transform: rotateY(90deg) translate3d(13px, 0px, 10px)
+		transform: rotateY(90deg) translate3d(13px, 0px, 11px)
 	.top-line,
 	.bottom-line
 		position: absolute
@@ -96,11 +109,19 @@ h4
 	.bottom-line
 		background: black
 		bottom: 0
-		transform: rotatex(90deg) translate3d(0px,-10px, 37px)
+		transform: rotatex(90deg) translate3d(0px,-13px, 37px)
 
 
 .control
 	transform-style: preserve-3d
+	.behind-field
+		position: absolute
+		background: red
+		top: 0
+		height: 47em
+		width: 100%
+		background: linear-gradient(to bottom, #2a3344 0%,#0F0B08 50%)
+		transform: translate3d(-20px, 10px, -14px)
 	.left-line
 		top: 0
 		width: 1em
@@ -193,7 +214,7 @@ h4
 		border: 25px solid #151515
 		border-radius: 10px
 		&::before
-			content: "Youtube"
+			content: "Uplab"
 			display: block
 			position: absolute
 			color: white
@@ -321,24 +342,28 @@ h4
 		display: block
 		width: 0
 		height: 0
+		border-radius: 10px
 	.control-btn-up
 		border: 1em solid transparent
 		border-bottom: 2em solid #AFBABC
 		display: block
 		width: 0
 		height: 0
+		border-radius: 10px
 	.control-btn-down
 		border: 1em solid transparent
 		border-top: 2em solid #AFBABC
 		display: block
 		width: 0
 		height: 0
+		border-radius: 10px
 	.control-btn-right
 		border: 1em solid transparent
 		border-left: 2em solid #AFBABC
 		display: block
 		width: 0
 		height: 0
+		border-radius: 10px
 	.control-btn-on
 		background: radial-gradient(ellipse at center, #D8445A 20%,#000000 150%)
 		border-radius: 40%
@@ -427,7 +452,7 @@ h4
 .rating
 	width: 90%
 	position: absolute
-	top: 10%
+	top: 5%
 	left: 5%
 	display: none
 	.rating-list
@@ -445,7 +470,7 @@ h4
 			margin-right: 10px
 .history
 	position: absolute
-	top: 10%
+	top: 5%
 	left: 5%
 	display: none
 	width: 90%

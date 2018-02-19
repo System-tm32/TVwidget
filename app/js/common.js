@@ -101,8 +101,8 @@ $(function() {
 			var rotateY = 180*(event.pageY - h)/h;
 
 			
-		   	$('.tv').css('transform', 'rotateY(' + rotateX/3 + 'deg) rotateX(' + (-1)*rotateY/3 + 'deg)' );
-		   
+		   	$('.tv').css('transform', 'rotateY(' + rotateX + 'deg) rotateX(' + (-1)*rotateY + 'deg)' );
+		   	$('.control').css('transform', 'rotateY(' + rotateX + 'deg) rotateX(' + (-1)*rotateY + 'deg)' );
 		  });
 	}
 
@@ -114,6 +114,8 @@ $(function() {
 		  var gamma    = event.gamma;
                 var a = '{"beta" : ' + beta + ',"gamma" :' + gamma + ',"alpha": ' + alpha + "}";
                 socket.send(a);
+
+
 		}
 
 	window.addEventListener('deviceorientation', handleOrientation);
@@ -122,7 +124,7 @@ $(function() {
 
 	  var gyro = JSON.parse(event.data);
 
-	  $(".tv").css("transform", "rotateY(" + gyro.gamma + "deg) rotateX(" + -1 * gyro.beta + "deg)");
+	  $(".control").css("transform", "rotateY(" + gyro.gamma + "deg) rotateX(" + -1 * gyro.beta + "deg) rotateZ(" + (-1)*gyro.alpha + "deg)");
 	  
 		};
 	}
@@ -251,6 +253,7 @@ var firstTime = 0;
 		});
     }
      function openRating() {
+     	var fullTime = 0;
     	$(".control-btn-long").on("click", function() {
 				$("iframe").attr("src"," ");
 				$('.ind').addClass('tv-on');
@@ -263,9 +266,9 @@ var firstTime = 0;
 
 						
 						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + "<span class=author-video>" +video[i].author + "</span>"+" <span class=\"right\"> " + Math.round(video[i].time/60) + " мин.</span></li>");
-					
+						fullTime+= Math.round(video[i].time/60);
 					}
-					
+						$(".rating-list").append("<li> <span class=\"right\"> Всего" + fullTime + " мин.</span></li>");
 				
 				}				
 				
