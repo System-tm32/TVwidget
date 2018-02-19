@@ -141,6 +141,7 @@ $(function() {
 				fbmode.update({
 					mode: '0'
 				});
+				firstTime = 0;
 				$('.put-video').removeClass('display');
 				$('.video').css('background','black');
 
@@ -261,7 +262,7 @@ var firstTime = 0;
 					for (var i = 0; i < video.length; i++){
 
 						
-						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + video[i].author + " Просмотрено: " + Math.round(video[i].time/60) + " мин.</li>");
+						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + "<span class=author-video>" +video[i].author + "</span>"+" <span class=\"right\"> " + Math.round(video[i].time/60) + " мин.</span></li>");
 					
 					}
 					
