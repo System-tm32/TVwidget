@@ -114,11 +114,19 @@ h4
 
 .control
 	transform-style: preserve-3d
+	perspective: 1200px
+	backface-visibility: visible
+	.control-back-text
+		color: #fff
+		position: absolute
+		top: 0
+		font-size: 5em
+		transform: rotateZ(90deg) rotateX(180deg) translate3d(200px, -10px, 15px)
 	.behind-field
 		position: absolute
 		background: red
 		top: 0
-		height: 47em
+		height: 45em
 		width: 100%
 		background: linear-gradient(to bottom, #2a3344 0%,#0F0B08 50%)
 		transform: translate3d(-20px, 10px, -14px)
@@ -129,6 +137,20 @@ h4
 		background: gray
 		position: absolute
 		transform: rotateY(90deg) translate3d(7px, 10px, -25px)
+	.top-line
+		top: 0
+		width: 100%
+		height: 1.1em
+		transform: rotatex(90deg) translate3d(-20px, -8px, -3px)
+		background: gray
+		position: absolute
+	.bottom-line
+		background: gray
+		position: absolute
+		bottom: 0
+		width: 100%
+		height: 1.05em
+		transform: rotatex(90deg) translate3d(-20px,-8px, -13px)
 	.right-line
 		top: 0
 		width: 1em
@@ -311,11 +333,16 @@ h4
 		.fa-stop,
 		.fa-bars,
 		.fa-times,
-		.fa-trash
+		.fa-trash,
+		.fa-compass
 			color: white
 			position: relative
 			top: 15%
 			left: 32%
+		.fa-compass
+			font-size: 1.8em
+			top: 15%
+			left: 18%
 		.btn-text
 			position: absolute
 			top: 15%
