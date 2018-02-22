@@ -62,6 +62,7 @@ $(function() {
 	var alpha = 0;
 	var beta = 0;
 	var gamma = 0;
+	var updateLux = 0;
 	var onMessageCallbacks = [];
 	
 
@@ -83,23 +84,24 @@ $(function() {
 		exitMenu();
 		deviceLight();
 		giveSocketMessage();
+		lightUpdate();
 
 	}
 	function giveSocketMessage(){
 		socket.onmessage = function(event){
 			var that = this;
-			//var _event = JSON.parse(event.data);
+			var _event = JSON.parse(event.data);
 
 			onMessageCallbacks.forEach(function(onMessage) {
-				console.log(_event, onMessage.name);
-				if (event.data.name === onMessage.name) {
-
+				
+				if (_event.name === onMessage.name) {
+					
 					onMessage.callback.call(that, event);
 				}
 			});
 		};
 
-		subscribe('hyro', function onMessage(event){
+		subscribe('gyro', function onMessage(event){
 
 			window.isMobile = function() {
 			  var check = false;
@@ -109,7 +111,7 @@ $(function() {
 
 			if (!window.isMobile()) {
 				 gyro = JSON.parse(event.data);	
-			  	
+			  		
 			  		$(".control").css("transform", "rotateY(" + (gyro.data.gamma - gamma) + "deg) rotateX(" + (-1)*(gyro.data.beta - beta) + "deg) rotateZ(" + (-1)*(gyro.data.alpha - alpha) + "deg)");
 		  		
 			}
@@ -120,9 +122,10 @@ $(function() {
 
 			light = JSON.parse(event.data);
 			if ( light.name == "light") {
+				var lux = (1-1*light.data.lux/1000).toFixed(2);
 				
 				$(document.body).css({
-					background: "rgba(0, 0, 0,"+ (1-1*light.data.lux/1000) + ")"
+					background: "rgba(0, 0, 0,"+ (lux-updateLux) + ")"
 				});
 			}
 
@@ -134,6 +137,17 @@ $(function() {
 				callback: onMessage
 			});
 		}
+	}
+	function lightUpdate(){
+		$(".control-btn").on("click", function() {
+
+			if ($(this).data('video') == 33) {
+				
+				updateLux = ((1-1*light.data.lux/1000).toFixed(2));
+				
+				}		
+		});
+
 	}
 	function deviceLight() {
 		var throttledSend = throttle(function(event) {
@@ -359,9 +373,9 @@ var firstTime = 0;
 
 			if ($(this).data('video') == 18) {
 				
-				alpha = Math.round(gyro.alpha);
-				beta = Math.round(gyro.beta);
-				gamma = Math.round(gyro.gamma);
+				alpha = Math.round(gyro.data.alpha);
+				beta = Math.round(gyro.data.beta);
+				gamma = Math.round(gyro.data.gamma);
 				
 				}		
 		});
