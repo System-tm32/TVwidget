@@ -88,13 +88,13 @@ $(function() {
 	function giveSocketMessage(){
 		socket.onmessage = function(event){
 			var that = this;
-			var _event = JSON.parse(event.data);
+			//var _event = JSON.parse(event.data);
 
 			onMessageCallbacks.forEach(function(onMessage) {
 				console.log(_event, onMessage.name);
-				if (_event.name === onMessage.name) {
+				if (event.data.name === onMessage.name) {
 
-					onMessage.callback.call(that, _event);
+					onMessage.callback.call(that, event);
 				}
 			});
 		};
@@ -109,7 +109,6 @@ $(function() {
 
 			if (!window.isMobile()) {
 				 gyro = JSON.parse(event.data);	
-			  	//	console.log("gamma: "+ gyro.name +"| beta"+  gyro.data.beta + "| alpha:" + gyro.data.alpha );
 			  	
 			  		$(".control").css("transform", "rotateY(" + (gyro.data.gamma - gamma) + "deg) rotateX(" + (-1)*(gyro.data.beta - beta) + "deg) rotateZ(" + (-1)*(gyro.data.alpha - alpha) + "deg)");
 		  		
@@ -206,13 +205,6 @@ $(function() {
 		}
 
 	window.addEventListener('deviceorientation', handleOrientation);
-
-
-
-	
-
-		  
-	  
 		
 	}
 
@@ -263,9 +255,7 @@ var firstTime = 0;
 						db.ref().child('/video/' + prevbtn).update({
 							 time: video[prevbtn].time
 						  });
-
-						
-						
+		
 					} 
 
                     prevbtn = $(this).data("video");
@@ -372,13 +362,8 @@ var firstTime = 0;
 				alpha = Math.round(gyro.alpha);
 				beta = Math.round(gyro.beta);
 				gamma = Math.round(gyro.gamma);
-
-				console.log(alpha + " | " + beta + " | " + gamma);
-					
-					
 				
 				}		
-
 		});
 
     }
@@ -396,14 +381,12 @@ var firstTime = 0;
 					historyLimit.once('value', function(snapshot){
 
 			    		snapshot.forEach(function(childSnapshot){
-			    			//var childKey = childSnapshot.key;
+			    			
 			    			var childData = childSnapshot.child("name").val();
 			    			$(".history-list").append("<li>"+ childData +"</li>");
 			    		})
 			    			 
 			    	});
-					
-				
 				}				
 				
 			indicator();
@@ -494,32 +477,32 @@ var firstTime = 0;
 
 	function throttle(func, ms) {
 
-  var isThrottled = false,
-    savedArgs,
-    savedThis;
+	  var isThrottled = false,
+		    savedArgs,
+		    savedThis;
 
-  function wrapper() {
+	  function wrapper() {
 
-    if (isThrottled) { // (2)
-      savedArgs = arguments;
-      savedThis = this;
-      return;
-    }
+	    if (isThrottled) {
+	      savedArgs = arguments;
+	      savedThis = this;
+	      return;
+	    }
 
-    func.apply(this, arguments); // (1)
+  	  func.apply(this, arguments); // (1)
 
-    isThrottled = true;
+    	isThrottled = true;
 
-    setTimeout(function() {
-      isThrottled = false; // (3)
-      if (savedArgs) {
-        wrapper.apply(savedThis, savedArgs);
-        savedArgs = savedThis = null;
-      }
-    }, ms);
-  }
+	    setTimeout(function() {
+	      isThrottled = false; // (3)
+	      if (savedArgs) {
+	        wrapper.apply(savedThis, savedArgs);
+	        savedArgs = savedThis = null;
+	      }
+	    }, ms);
+  	}
 
-  return wrapper;
-}
+ 	 return wrapper;
+	}
 
 });
