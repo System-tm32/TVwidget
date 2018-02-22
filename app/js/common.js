@@ -152,7 +152,7 @@ $(function() {
 	function deviceLight() {
 		var throttledSend = throttle(function(event) {
 		  
-		  console.log(event.value);
+		 
 		  var lightDev = {
 		  	name: "light",
 		  	data: {
