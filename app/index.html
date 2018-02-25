@@ -5,9 +5,11 @@
 	<meta charset="utf-8">
 	<title>Widget</title>
 	<meta name="description" content="">
+	<meta name="theme-color" content="#000">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="css/main.min.css">
+	<link rel="stylesheet" href="libs/chartist/dist/chartist.min.css">
 </head>
 
 <body>
@@ -259,9 +261,9 @@
 					</div>
 					<div class="control-row">
 						<div class="control-col-3">
-							<div class="control-btn-long">
+							<div class="control-btn-long" data-video="27">
 								<span class="btn-text-2">
-									epg
+									chart
 								</span>
 							</div>
 						</div>
@@ -390,6 +392,12 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-6">
+				<canvas id="chart" width="700" height="100" class="chart"></canvas>
+			</div>
+			
+		</div>
 	</div>
 	
 	
@@ -408,6 +416,7 @@
 	  firebase.initializeApp(config);
 	</script>
 	<script src="libs/jquery/dist/jquery.min.js"></script>
+	<script src="libs/smot/smoothie.js"></script>
 	<script src="js/common.js"></script>
 
 </body>

@@ -55,6 +55,7 @@ $(function() {
 	var fbmode = db.ref().child("control-mode");
 	var history = db.ref().child("history");
 	var historyLimit = db.ref().child("history").limitToLast(10);
+	var smoothie = new SmoothieChart({tooltip:true});
 	var mode ;
 	var gyro;
 	var light;
@@ -64,7 +65,11 @@ $(function() {
 	var gamma = 0;
 	var updateLux = 0;
 	var onMessageCallbacks = [];
-	
+	var firstTime = 0;
+	var btnMark = 0;
+	var word = [];
+	var count = 0;
+	var q = 0;
 
 	init();
 	
@@ -85,7 +90,48 @@ $(function() {
 		deviceLight();
 		giveSocketMessage();
 		lightUpdate();
+		chartistDraw();
+		openChart();
 
+
+	}
+	function openChart(){
+		$(".control-btn-long").on("click", function() {
+			
+				if ($(this).data('video') == 27) {
+	
+					$('#chart').toggleClass('display');	
+				
+				}				
+				
+			indicator();
+		});
+	}
+	function chartistDraw() {
+		
+		smoothie.streamTo(document.getElementById("chart"),1000);
+		
+		var line1 = new TimeSeries();
+		var line2 = new TimeSeries();
+		var line3 = new TimeSeries();
+
+		
+		setInterval(function() {
+		  line1.append(new Date().getTime(), Math.random());
+		  line2.append(new Date().getTime(), Math.random());
+		  line3.append(new Date().getTime(), Math.random());
+		}, 1000);
+
+		
+		smoothie.addTimeSeries(line1,{
+			strokeStyle:'#00ff00'
+		});
+		smoothie.addTimeSeries(line2,{
+			strokeStyle:'#0a6cff'
+		});
+		smoothie.addTimeSeries(line3,{
+			strokeStyle:'#ff0a0a'
+		});
 	}
 	function giveSocketMessage(){
 		socket.onmessage = function(event){
@@ -170,6 +216,7 @@ $(function() {
 		videos.once('value')
 		.then( function(snapshot) {
 			for ( var i = 0; i < video.length; i++){
+
 				video[i].time = snapshot.child(i).child("time").val();
 				
 			}
@@ -181,6 +228,7 @@ $(function() {
     		
     	});
 	}
+
 	function objectMove() {
 
 		$( document ).mousemove(function( event ){
@@ -189,7 +237,6 @@ $(function() {
 			var h = $(window).height()/2;
 			var rotateX = 180*(event.pageX - w)/w;
 			var rotateY = 180*(event.pageY - h)/h;
-
 			
 		   	$('.tv').css('transform', 'rotateY(' + rotateX/3 + 'deg) rotateX(' + (-1)*rotateY/3 + 'deg)' );
 		   		
@@ -203,7 +250,6 @@ $(function() {
 		  var beta     = event.beta;
 		  var gamma    = event.gamma;
 		  
-              // var a = '{"beta" : ' + beta + ',"isMove" :' + 1 + ',"gamma" :' + gamma + ',"alpha": ' + alpha + "}";
                 var position = {
                 	name: "gyro",
                 	data: {
@@ -211,18 +257,12 @@ $(function() {
                 		beta: event.beta,
                 		gamma: event.gamma
                 	}
-
                 };
                 socket.send(JSON.stringify(position));
-
-
 		}
-
-	window.addEventListener('deviceorientation', handleOrientation);
-		
+	window.addEventListener('deviceorientation', handleOrientation);	
 	}
 
-	
 	function btnClickOff(){
 
 		$(".control-btn-on").on("click", function() {
@@ -232,7 +272,7 @@ $(function() {
 				$('.ind').removeClass('tv-on');
 				$("iframe").attr("src"," ");
 				$(".rating-list").empty();
-				//localStorage.setItem('mode','0');
+				
 				fbmode.update({
 					mode: '0'
 				});
@@ -246,15 +286,11 @@ $(function() {
 				$("iframe").attr("src","https://www.youtube.com/embed/" + video[0].name + "?showinfo=0&autoplay=1 ");
 			
 			}
-
 			indicator();
-
 		});
 
 	}
 
-
-var firstTime = 0;
 	function btnClick() {
 		var prevbtn;
 		$(".control-btn").on("click", function() {
@@ -291,13 +327,11 @@ var firstTime = 0;
 			indicator();
 		});
 	}
-	var btnMark = 0;
-	var word = [];
-	var count = 0;
-	var q = 0;
+	
 	function getLastBtn(num) {
 		return num;
 	}
+
 	function putTex(btnObj,btnNum) {
         var strArr = [];
         var letter = $(btnObj).data("let");
@@ -362,7 +396,6 @@ var firstTime = 0;
 						$(".rating-list").append("<li> <span class=\"right\"> Всего" + fullTime + " мин.</span></li>");
 				
 				}				
-				
 			indicator();
 		});
     }
@@ -503,12 +536,12 @@ var firstTime = 0;
 	      return;
 	    }
 
-  	  func.apply(this, arguments); // (1)
+  	  func.apply(this, arguments);
 
     	isThrottled = true;
 
 	    setTimeout(function() {
-	      isThrottled = false; // (3)
+	      isThrottled = false;
 	      if (savedArgs) {
 	        wrapper.apply(savedThis, savedArgs);
 	        savedArgs = savedThis = null;
