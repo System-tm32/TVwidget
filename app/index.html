@@ -9,7 +9,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="css/main.min.css">
-	<link rel="stylesheet" href="libs/chartist/dist/chartist.min.css">
 </head>
 
 <body>
@@ -43,7 +42,7 @@
 							</ol>
 						</div>
 					</div>
-					<div class="behind-field"><span class="behind-text">VT</span></div>
+					<div class="behind-field"></div>
 					<div class="left-line"></div>
 					<div class="top-line"></div>
 					<div class="bottom-line "></div>
@@ -56,8 +55,7 @@
 				</div>
 				
 			</div>
-			<div class="tv-col-6" style="
-	perspective: 1000px;">
+			<div class="tv-col-6" style="perspective: 1000px;">
 
 				<div class="control">
 					<div class="control-back-text">Uplab</div>
@@ -394,6 +392,12 @@
 		</div>
 		<div class="row">
 			<div class="col-6">
+				<div class="legend">
+					<span class="text-beta">Beta</span>
+					<span class="text-gamma">Gamma</span>
+					<span class="text-alpha">Alpha</span>
+				</div>
+				
 				<canvas id="chart" width="700" height="100" class="chart"></canvas>
 			</div>
 			
@@ -404,7 +408,7 @@
 	
 	<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
 	<script>
-	  // Initialize Firebase
+	  
 	  var config = {
 	    apiKey: "AIzaSyBSLi80q6Fh1CHNmMtBY4JxLM0KIMzn5hQ",
 	    authDomain: "projecttest-30fdb.firebaseapp.com",
@@ -414,6 +418,7 @@
 	    messagingSenderId: "74365067755"
 	  };
 	  firebase.initializeApp(config);
+
 	</script>
 	<script src="libs/jquery/dist/jquery.min.js"></script>
 	<script src="libs/smot/smoothie.js"></script>

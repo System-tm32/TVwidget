@@ -1,5 +1,5 @@
 $(function() {
-	var socket = new WebSocket("ws://192.168.0.206:8081");
+	var socket = new WebSocket("ws://192.168.0.214:8081");
 
 	var video = [
 		{
@@ -55,7 +55,7 @@ $(function() {
 	var fbmode = db.ref().child("control-mode");
 	var history = db.ref().child("history");
 	var historyLimit = db.ref().child("history").limitToLast(10);
-	var smoothie = new SmoothieChart({tooltip:true});
+	var smoothie = new SmoothieChart({tooltip:true,millisPerPixel:15});
 	var mode ;
 	var gyro;
 	var light;
@@ -93,7 +93,6 @@ $(function() {
 		chartistDraw();
 		openChart();
 
-
 	}
 	function openChart(){
 		$(".control-btn-long").on("click", function() {
@@ -101,38 +100,36 @@ $(function() {
 				if ($(this).data('video') == 27) {
 	
 					$('#chart').toggleClass('display');	
-				
+					$('.legend').toggleClass('display');
 				}				
 				
-			indicator();
 		});
 	}
 	function chartistDraw() {
 		
 		smoothie.streamTo(document.getElementById("chart"),1000);
 		
-		var line1 = new TimeSeries();
-		var line2 = new TimeSeries();
-		var line3 = new TimeSeries();
-
+		var lineBeta = new TimeSeries();
+		var lineGamma = new TimeSeries();
+		var lineAlpha = new TimeSeries();
 		
 		setInterval(function() {
-		  line1.append(new Date().getTime(), Math.random());
-		  line2.append(new Date().getTime(), Math.random());
-		  line3.append(new Date().getTime(), Math.random());
+		  lineBeta.append(new Date().getTime(), gyro.data.beta);
+		  lineGamma.append(new Date().getTime(), gyro.data.gamma);
+		  lineAlpha.append(new Date().getTime(), gyro.data.alpha);
 		}, 1000);
 
-		
-		smoothie.addTimeSeries(line1,{
+		smoothie.addTimeSeries(lineBeta,{
 			strokeStyle:'#00ff00'
 		});
-		smoothie.addTimeSeries(line2,{
+		smoothie.addTimeSeries(lineGamma,{
 			strokeStyle:'#0a6cff'
 		});
-		smoothie.addTimeSeries(line3,{
+		smoothie.addTimeSeries(lineAlpha,{
 			strokeStyle:'#ff0a0a'
 		});
 	}
+
 	function giveSocketMessage(){
 		socket.onmessage = function(event){
 			var that = this;
@@ -173,6 +170,11 @@ $(function() {
 				$(document.body).css({
 					background: "rgba(0, 0, 0,"+ (lux-updateLux) + ")"
 				});
+				if (!isOn()){
+					$(".video").css({
+						background: "rgba(31, 31, 31,"+ (lux-updateLux) + ")"
+					})
+				}
 			}
 
 		});
@@ -198,7 +200,6 @@ $(function() {
 	function deviceLight() {
 		var throttledSend = throttle(function(event) {
 		  
-		 
 		  var lightDev = {
 		  	name: "light",
 		  	data: {
@@ -208,6 +209,7 @@ $(function() {
 		  socket.send(JSON.stringify(lightDev));
 		  
 		}, 500);
+
 		window.addEventListener('devicelight', throttledSend  );
 
 	}
@@ -263,7 +265,7 @@ $(function() {
 	window.addEventListener('deviceorientation', handleOrientation);	
 	}
 
-	function btnClickOff(){
+	function btnClickOff(){ //!!!!!!!!
 
 		$(".control-btn-on").on("click", function() {
 
@@ -291,7 +293,7 @@ $(function() {
 
 	}
 
-	function btnClick() {
+	function btnClick() { //!!!!!!!!
 		var prevbtn;
 		$(".control-btn").on("click", function() {
 			btnMark = getLastBtn(localStorage.getItem('btnsave'));
@@ -328,11 +330,11 @@ $(function() {
 		});
 	}
 	
-	function getLastBtn(num) {
+	function getLastBtn(num) { //!!!!!!!!
 		return num;
 	}
 
-	function putTex(btnObj,btnNum) {
+	function putTex(btnObj,btnNum) { //!!!!!!!!
         var strArr = [];
         var letter = $(btnObj).data("let");
 	    	strArr = letter.split("");
@@ -365,7 +367,6 @@ $(function() {
 				
 				if ($(this).data('video') == 111) {
 
-					localStorage.setItem("mode","0");
 					fbmode.update({
 						mode: '0'
 					});
@@ -453,9 +454,7 @@ $(function() {
 					});
 					$('.put-video').addClass('display');
 					$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
-				
 				}				
-				
 			indicator();
 		});
 	}
@@ -469,8 +468,6 @@ $(function() {
 					$("#put-name-video").val(" ");
 					
 				}				
-				
-			indicator();
 		});
 	}
 
@@ -491,8 +488,6 @@ $(function() {
 					$(".history-list").empty();
 					
 				}				
-				
-			indicator();
 		});
 	}
 
@@ -516,7 +511,7 @@ $(function() {
 		    }, 700);	 
 
 	}
-	function getTimeView(){
+	function getTimeView(){ //!!!!!!!!
 
 		var tmp = new Date();
 		return tmp.getTime()
