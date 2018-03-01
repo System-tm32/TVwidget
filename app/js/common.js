@@ -1,6 +1,5 @@
 $(function() {
 	var socket = new WebSocket("ws://192.168.0.214:8081");
-
 	var video = [
 		{
 			author: "События",
@@ -75,7 +74,7 @@ $(function() {
 	
 	function init() {
 
-		listenFB();
+		listenerFirebase();
 		btnClick();
 		btnClickOff();
 		objectMove();
@@ -83,7 +82,7 @@ $(function() {
 		deleteTextInput();
 		openRating();
 		openHistory();
-		openVideo();
+		openEnteredVideo();
 		updateGyro();
 		openMenu();
 		exitMenu();
@@ -96,13 +95,10 @@ $(function() {
 	}
 	function openChart(){
 		$(".control-btn-long").on("click", function() {
-			
-				if ($(this).data('video') == 27) {
-	
-					$('#chart').toggleClass('display');	
-					$('.legend').toggleClass('display');
-				}				
-				
+			if ($(this).data('video') == 27) {
+				$('#chart').toggleClass('display');	
+				$('.legend').toggleClass('display');
+			}				
 		});
 	}
 	function chartistDraw() {
@@ -136,7 +132,6 @@ $(function() {
 			var _event = JSON.parse(event.data);
 
 			onMessageCallbacks.forEach(function(onMessage) {
-				
 				if (_event.name === onMessage.name) {
 					
 					onMessage.callback.call(that, event);
@@ -153,10 +148,8 @@ $(function() {
 			}
 
 			if (!window.isMobile()) {
-				 gyro = JSON.parse(event.data);	
-			  		
-			  		$(".control").css("transform", "rotateY(" + (gyro.data.gamma - gamma) + "deg) rotateX(" + (-1)*(gyro.data.beta - beta) + "deg) rotateZ(" + (-1)*(gyro.data.alpha - alpha) + "deg)");
-		  		
+				gyro = JSON.parse(event.data);	
+			  	$(".control").css("transform", "rotateY(" + (gyro.data.gamma - gamma) + "deg) rotateX(" + (-1)*(gyro.data.beta - beta) + "deg) rotateZ(" + (-1)*(gyro.data.alpha - alpha) + "deg)");	
 			}
 
 		});
@@ -192,8 +185,8 @@ $(function() {
 			if ($(this).data('video') == 33) {
 				
 				updateLux = ((1-1*light.data.lux/1000).toFixed(2));
-				
-				}		
+			
+			}		
 		});
 
 	}
@@ -211,10 +204,9 @@ $(function() {
 		}, 500);
 
 		window.addEventListener('devicelight', throttledSend  );
-
 	}
 
-	function listenFB(){
+	function listenerFirebase(){
 		videos.once('value')
 		.then( function(snapshot) {
 			for ( var i = 0; i < video.length; i++){
@@ -225,14 +217,11 @@ $(function() {
 		});
 	
 	    fbmode.on('value', function(snapshot){
-
 	    		mode = snapshot.child("mode").val();
-	    		
 	    	});
 	}
 
 	function objectMove() {
-
 		$( document ).mousemove(function( event ){
 
 			var w = $(window).width()/2;
@@ -266,30 +255,22 @@ $(function() {
 	}
 
 	function btnClickOff(){
-
 		$(".control-btn-on").on("click", function() {
-
 			if (isOn()) {
 
 				fbmode.update({
 					mode: '0'
-				});
-				firstTime = 0;
-				clearMenu($(this).data('video'))
-				$('.video').css('background','black');
-
+				});	
+				btnActionDisplay($(this).data('video'));
 			} else {
-
 				$('.ind').addClass('tv-on');
 				$("iframe").attr("src","https://www.youtube.com/embed/" + video[0].name + "?showinfo=0&autoplay=1 ");
-			
 			}
 			indicator();
 		});
-
 	}
 
-	function btnClick() { //!!!!!!!!
+	function btnClick() {
 		var prevbtn;
 		$(".control-btn").on("click", function() {
 			btnMark = localStorage.getItem('btnsave');
@@ -298,39 +279,34 @@ $(function() {
 				if ($(this).data("video") == i) {
 					if ( typeof prevbtn !== 'undefined' ) {
 						
-						video[prevbtn].time += (new Date().getTime() - firstTime)/1000;
+						video[prevbtn].time += (nowTime() - firstTime)/1000;
 						
 						db.ref().child('/video/' + prevbtn).update({
 							 time: video[prevbtn].time
 						  });
-		
 					} 
 
                     prevbtn = $(this).data("video");
-                    firstTime = new Date().getTime();
+                    firstTime = nowTime();
+
                     if ( mode == 1 ){
                     	firstTime = 0;
                     	localStorage.setItem('btnsave', i);
-                    	putTex($(this),i);
+                    	writingLettersToInput($(this),i);
                     } 
                    	 else {
                    	 	// history.push({
                    	 	// 	"name": video[i].author
                    	 	// });
-                   	 	$("iframe").attr("src", "https://www.youtube.com/embed/" + video[i].name + "?showinfo=0&autoplay=1&start=" + Math.round(video[i].time));
-                   	 	
+                   	 	$("iframe").attr("src", "https://www.youtube.com/embed/" + video[i].name + "?showinfo=0&autoplay=1&start=" + Math.round(video[i].time)); 	 	
                    	 }
                 }				
 			}	
 			indicator();
 		});
 	}
-	
-	function getLastBtn(num) { //!!!!!!!!
-		return num;
-	}
 
-	function putTex(btnObj,btnNum) { //!!!!!!!!
+	function writingLettersToInput(btnObj,btnNum) { //!!!!!!!!
         var strArr = [];
         var letter = $(btnObj).data("let");
 	    	strArr = letter.split("");
@@ -354,50 +330,38 @@ $(function() {
         	count = 0;
         }
     }
-    function openVideo() {
-    	$(".control-btn-long").on("click", function() {
-			
-				$('.ind').addClass('tv-on');
-				
-				if ($(this).data('video') == 111) {
+    function openEnteredVideo() {
+    	$(".control-btn-long").on("click", function() {	
+			if ($(this).data('video') == 111) {
 
-					fbmode.update({
-						mode: '0'
-					});
-					
-					clearMenu($(this).data('video'));
-					$("iframe").attr("src", "https://www.youtube.com/embed/" + word.join('') + "?showinfo=0&autoplay=1");
+				fbmode.update({
+					mode: '0'
+				});
 				
-				}				
-				
+				btnActionDisplay($(this).data('video'));
+			}				
 			indicator();
 		});
     }
      function openRating() {
      	var fullTime = 0;
-    	$(".control-btn-long").on("click", function() {
-				$("iframe").attr("src"," ");
-				$('.ind').addClass('tv-on');
+    	$(".control-btn-long").on("click", function() {	
+			if ($(this).data('video') == 50) {
 				
-				if ($(this).data('video') == 50) {
-					
-					clearMenu($(this).data('video'));
-					$('.rating').addClass('display');
-					$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
-					for (var i = 0; i < video.length; i++){
+				btnActionDisplay($(this).data('video'));
 
-						$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + "<span class=author-video>" +video[i].author + "</span>"+" <span class=\"right\"> " + Math.round(video[i].time/60) + " мин.</span></li>");
-						fullTime+= Math.round(video[i].time/60);
-					}
-						$(".rating-list").append("<li> <span class=\"right\"> Всего" + fullTime + " мин.</span></li>");
-				
-				}				
+				for (var i = 0; i < video.length; i++){
+
+					$(".rating-list").append("<li><img src=https://i1.ytimg.com/vi/"+ video[i].name +"/3.jpg>" + "<span class=author-video>" +video[i].author + "</span>"+" <span class=\"right\"> " + Math.round(video[i].time/60) + " мин.</span></li>");
+					fullTime+= Math.round(video[i].time/60);
+				}
+					$(".rating-list").append("<li> <span class=\"right\"> Всего" + fullTime + " мин.</span></li>");
+			}				
 			indicator();
 		});
     }
 
     function updateGyro(){
-
     	$(".control-btn").on("click", function() {
 
 			if ($(this).data('video') == 18) {
@@ -408,85 +372,74 @@ $(function() {
 				
 				}		
 		});
-
     }
 
     function openHistory() {
     	$(".control-btn-long").on("click", function() {
-			
-				$('.ind').addClass('tv-on');
-				$("iframe").attr("src"," ");
+			if ($(this).data('video') == 51) {
 				
-				if ($(this).data('video') == 51) {
-					
-					clearMenu($(this).data('video'));
-					$('.history').addClass('display');
-					$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
-					historyLimit.once('value', function(snapshot){
+				btnActionDisplay($(this).data('video'));
 
-			    		snapshot.forEach(function(childSnapshot){
-			    			
-			    			var childData = childSnapshot.child("name").val();
-			    			$(".history-list").append("<li>"+ childData +"</li>");
+				historyLimit.once('value', function(snapshot){
+		    		snapshot.forEach(function(childSnapshot){
+		    			
+		    			var childData = childSnapshot.child("name").val();
+		    			$(".history-list").append("<li>"+ childData +"</li>");
 
-			    		})
-			    			 
-			    	});
-				}				
+		    		})		 
+		    	});
+			}				
 			indicator();
 		});
     }
 	function openMenu() {
 		$(".control-btn").on("click", function() {
-			
-				$('.ind').addClass('tv-on');
-				
-				if ($(this).data('video') == 100) {
+			if ($(this).data('video') == 100) {
 
-					clearMenu($(this).data('video'));
-					localStorage.setItem("mode","1");
-					fbmode.update({
-						mode: '1'
-					});
-					$('.put-video').addClass('display');
-					$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
-				}				
+				btnActionDisplay($(this).data('video'));
+
+				localStorage.setItem("mode","1");
+				fbmode.update({
+					mode: '1'
+				});
+			}				
 			indicator();
 		});
 	}
 	function deleteTextInput() {
 		$(".control-btn").on("click", function() {
-			
-				$('.ind').addClass('tv-on');
+			if ($(this).data('video') == 200) {
+
+				btnActionDisplay($(this).data('video'));
 				
-				if ($(this).data('video') == 200) {
-					clearMenu($(this).data('video'));
-					
-				}				
+			}				
 		});
+	}
+
+	function nowTime(){
+		var tmp = new Date();
+		return tmp.getTime();
 	}
 
 	function exitMenu( ) {
 		$(".control-btn").on("click", function() {
+			if ($(this).data('video') == 101) {
 
-				$('.ind').addClass('tv-on');
+				localStorage.setItem("mode","0");
+				fbmode.update({
+					mode: '0'
+				});
 
-				if ($(this).data('video') == 101) {
-
-					localStorage.setItem("mode","0");
-					fbmode.update({
-						mode: '0'
-					});
-					clearMenu($(this).data('video'));
-					
-				}				
+				btnActionDisplay($(this).data('video'));
+			}				
 		});
 	}
-
-	function clearMenu(numberBtn){
+	function btnActionDisplay(numberBtn){
 
 		switch ( numberBtn ) {
-			case 102://btnclickoff
+				case 102://btnclickoff
+				firstTime = 0;
+				$('.video').css('background','black');
 				$('.ind').removeClass('tv-on');
 				$("iframe").attr("src"," ");
 				$(".rating-list").empty();
@@ -496,29 +449,40 @@ $(function() {
 				$('.history').removeClass('display');
 				$('.put-video').removeClass('display');
 			break;
-			case 111:// openvideo
+			case 111:// openEnteredVideo
+				$('.ind').addClass('tv-on');
+				$("iframe").attr("src", "https://www.youtube.com/embed/" + word.join('') + "?showinfo=0&autoplay=1");
 				$('.put-video').removeClass('display');
 			break;
 			case 50://openRaiting
+				$('.rating').addClass('display');
+				$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
 				$("iframe").attr("src"," ");
+				$('.ind').addClass('tv-on');
 				$('.history').removeClass('display');
 				$(".history-list").empty();
 				$('.history').removeClass('display');
 				$('.put-video').removeClass('display');
 			break;
 			case 51://openhistory
+				$('.history').addClass('display');
+				$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
+				$('.ind').addClass('tv-on');
 				$('.rating').removeClass('display');
 				$("iframe").attr("src"," ");
 				$(".rating-list").empty();
 				$('.put-video').removeClass('display');
 			break;
 			case 100: //openmenu
+				$('.put-video').addClass('display');
+				$('.video').css('background','radial-gradient(ellipse at center, #cfedf9 0%,#2bb0ed 100%)');
 				$("iframe").attr("src"," ");
 				$(".rating-list").empty();
 				$(".history-list").empty();
 				$('.history').removeClass('display');
 			break;
 			case 101://exitmenu
+				$('.ind').addClass('tv-on');
 				$('.ind').removeClass('tv-on');
 				$("iframe").attr("src"," ");
 				$(".rating-list").empty();
@@ -532,28 +496,20 @@ $(function() {
 			break;
 
 		}
-		
 	}
 
 	function isOn(){
-
 		if ($('.ind').hasClass('tv-on')){
 			return true;
 		} else {
 			return false;
 		}
-
 	}
 	function indicator() {
-
 		    $('.ind-1').addClass('anim');
-
 		    setTimeout (function() {
-
 		      $('.ind-1').removeClass('anim');
-
 		    }, 700);	 
-
 	}
 
 	function throttle(func, ms) {
@@ -582,8 +538,6 @@ $(function() {
 	      }
 	    }, ms);
   	}
-
  	 return wrapper;
 	}
-
 });
